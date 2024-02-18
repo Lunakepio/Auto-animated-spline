@@ -11,20 +11,21 @@ export const Experience = () => {
   const cam = useRef();
   const lookAtTarget = useRef();
   const [currentPoint, setCurrentPoint] = useState(0);
-  const speedFactor = 0.03;
+  const speedFactor = 0.3 ;
   
 
   useFrame(()=>{
     const camera = cam.current;
-    if (currentPoint < points.length - 1) {
+    if(currentPoint < points.length - 1){
       camera.position.lerp(points[currentPoint], speedFactor);
-      camera.lookAt(points[currentPoint+1]);
-
-      if (camera.position.distanceTo(points[currentPoint]) < 0.1) {
-        setCurrentPoint(currentPoint + 1);
+      lookAtTarget.current.position.lerp(points[currentPoint + 1], speedFactor)
+      camera.lookAt(lookAtTarget.current.position);
+    
+      if(camera.position.distanceTo(points[currentPoint]) < 0.1){
+        setCurrentPoint(currentPoint + 1)
       }
     } else {
-      setCurrentPoint(0);
+      setCurrentPoint(0)
     }
   });
 
@@ -33,6 +34,7 @@ export const Experience = () => {
     <>
     <Model/>
     {/* <OrbitControls/> */}
+    <mesh ref={lookAtTarget}></mesh>
     <PerspectiveCamera ref={cam} makeDefault position={[0,2,0]} />
     <Environment preset="apartment"/>
     </>
